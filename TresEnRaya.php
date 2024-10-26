@@ -3,79 +3,95 @@
 class TresEnRaya {
 
     private $resultado;
+    private $dimension;
+    private $tokenX, $tokenO;
 
 
-    public function __construct($resultado) {
-        $temp = [];
-        $i = 0;
-        while ($i < 9) {
-                for ($j = 0; $j < 3; $j++) {
-                        for ($k = 0; $k < 3; $k++) {
-                        $temp[$i] = $resultado[$j][$k];
-                        $i++;
-                        }
-                }
-        }
-        $this->resultado = $temp;
-        $this->printTirada();
+    public function __construct($resultado, $dimension, $tokenX, $tokenO) {
+        $this->resultado = $resultado;
+        $this->dimension = $dimension;
+        $this->tokenX = $tokenX;
+        $this->tokenO = $tokenO;
     }
 
-    private function  fila ($token) {
-        if (($this->resultado[0] == "$token" && $this->resultado[0] == $this->resultado[1] && $this->resultado[0] == $this->resultado[2])
-            || ($this->resultado[3] == "$token" && $this->resultado[3] == $this->resultado[4] && $this->resultado[3] == $this->resultado[5])
-            || ($this->resultado[6] == "$token" && $this->resultado[6] == $this->resultado[7] && $this->resultado[6] == $this->resultado[8])) {
-                return true;
-            } else {
-        return false;
+        private function fila ($token) {
+            for ($j = 0; $j < $this->dimension; $j++) {
+                $k = 0;
+                for ($i = 0; $i < $this->dimension - 1; $i++) {
+                    if ($this->resultado[$j][$i] == "$token" && $this->resultado[$j][$i] == $this->resultado[$j][$i+1]) {
+                        $k += 1; }
+                }
+                if ($k == $this->dimension - 1) {
+                    return $fila = true;
+                }
             }
+            return $fila = false;
         }
 
-    private function  columna ($token) {
-        if (($this->resultado[0] == "$token" && $this->resultado[0] == $this->resultado[3] && $this->resultado[0] == $this->resultado[6])
-            || ($this->resultado[1] == "$token" && $this->resultado[1] == $this->resultado[4] && $this->resultado[1] == $this->resultado[7])
-            || ($this->resultado[2] == "$token" && $this->resultado[2] == $this->resultado[5] && $this->resultado[2] == $this->resultado[8])) {
-                return true;
-            } else {
-        return false;
+
+        private function columna ($token) {
+            for ($j = 0; $j < $this->dimension; $j++) {
+                $k = 0;
+                for ($i = 0; $i < $this->dimension - 1; $i++) {
+                    if ($this->resultado[$i][$j] == "$token" && $this->resultado[$i][$j] == $this->resultado[$i+1][$j]) {
+                        $k += 1; }
+                }
+                if ($k == $this->dimension - 1) {
+                    return $columna = true;
+                }
             }
+            return $columna = false;
+
         }
 
-    private function  diagonal ($token) {
-        if (($this->resultado[0] == "$token" && $this->resultado[0] == $this->resultado[4] && $this->resultado[0] == $this->resultado[8])
-            || ($this->resultado[2] == "$token" && $this->resultado[2] == $this->resultado[4] && $this->resultado[2] == $this->resultado[6])) {
-                return true;
-            } else {
-        return false;
-            }
+    private function diagonal ($token) {
+            $k = 0;
+            for ($j = 0; $j < $this->dimension - 1; $j++) {
+
+                if ($this->resultado[$j][$j] == "$token" && $this->resultado[$j][$j] == $this->resultado[$j+1][$j+1]) {
+                        $k += 1; }
+                }
+
+                if ($k == $this->dimension - 1) {
+                    return $diagonal = true;
+                }
+            $k = 0;
+            for ($j = $this->dimension - 1; $j > 0; $j--) {
+
+                if ($this->resultado[($this->dimension - 1) - $j][$j] == "$token" && $this->resultado[($this->dimension - 1) - $j][$j] == $this->resultado[($this->dimension - 1) - $j + 1][$j - 1]) {
+                        $k += 1; }
+                }
+
+                if ($k == $this->dimension - 1) {
+                    return $diagonal = true;
+                }
+            return $diagonal = false;
         }
+
+
     
     public function evaluarPartida() {
-
-        $x = ($this->columna("X") || $this->fila("X") || $this->diagonal("X")) ? true : false;
-        $o = ($this->columna("O") || $this->fila("O") || $this->diagonal("O")) ? true : false;
+        $this->printTirada();
+        $x = ($this->diagonal($this->tokenX) || $this->columna($this->tokenX) || $this->fila($this->tokenX) ) ? true : false;
+        $o = ($this->diagonal($this->tokenO) || $this->columna($this->tokenO) || $this->fila($this->tokenO) ) ? true : false;
 
         return match(true) {
             ($x && $o) || (!$x && !$o)  => "Empate",
-            ($x && !$o) => "Ganan las X",
-            (!$x && $o) => "Ganan las O",
+            ($x && !$o) => "Ganan las " . $this->tokenX,
+            (!$x && $o) => "Ganan las " . $this->tokenO,
         };         
 
     }
 
     public function printTirada() {
-        for($i = 0; $i < 3; $i++)
-            echo PHP_EOL . "( " . $this->resultado[3*$i] . " , " . $this->resultado[3*$i + 1] . " , " . $this->resultado[3*$i + 2] . " )" . PHP_EOL;
-
-
-
+        foreach($this->resultado as $fila) {
+            echo "( ";
+            foreach($fila as $token) {
+                echo " $token ";
+            }
+            echo " ) " . PHP_EOL;
+        }
     }
-    
-
-    
-    
-
-
-
 }
 
 
