@@ -1,4 +1,4 @@
 Mejoras en el segundo commit:
-- Se mejora la lógica de la generación de la matriz de tokens
-- Se adapta el código para que se pueda jugar con una matriz de nxn, no solo de 3x3
-- Se pueden cambiar los caracteres mostrados en la matriz de juego (por defecto X, O)
+- Se eliminan las contantes
+- Se pide al usuario la dimensión del juego
+- Se piden al usuario los tokens a utilizar

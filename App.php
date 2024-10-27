@@ -1,9 +1,6 @@
 <?php
 include "TresEnRaya.php";
 
-const TOKEN_X = "X";
-const TOKEN_O = "O";
-
 function token( $tokenX, $tokenO) {
         return (rand(0,1) == 0) ? $tokenX : $tokenO;
 }
